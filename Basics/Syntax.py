@@ -21,3 +21,4 @@ y = "Hello, World"
 
 #Comments
 # is used to create comments in python
+#Theres actually no multi line comments so use a triple string like above 
