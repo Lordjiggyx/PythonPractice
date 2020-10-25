@@ -57,5 +57,5 @@ print(thisdict)
 "del can be used to delete a dictionary altogether when yoou do not specify the key name"
 
 "clear() can be used to clear the dict"
-"copying is the same you either use the .copy() method or use the dictionary function dict()
+"copying is the same you either use the .copy() method or use the dictionary function dict()"
 "A new dictionary can be created b using the dict constrcutor too"
