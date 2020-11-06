@@ -45,8 +45,8 @@ class Order(Base):
     customer_id = Column(Integer(), ForeignKey('customers.id'))
     date_placed = Column(DateTime(), default=datetime.now)
     #This is another way of creating an asscoaiation table by using a class
-    #here we pass in the name of the class, then the name of the assocation table and then finally create an attribute in the Ordline model called orders
-    line_items = relationship("OrderLine", secondary="order_lines", backref='order')
+    #here we pass in the name of the class, and then finally create an attribute in the Ordline model called orders
+    line_items = relationship("OrderLine",  backref='order')
     
 #This class is actually an assocation table
 class OrderLine(Base):
