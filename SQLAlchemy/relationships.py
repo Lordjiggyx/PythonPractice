@@ -35,10 +35,6 @@ THE NAME USED IN BACKREF MUST MATCH THE NAME OF THE BIDERECTIONAL RELATIONSHIP V
 
 """
 
-
-
-
-#creates the table
 def createOneToMany():
     #creating the customer class and it's mapping
     class Customer(Base):
@@ -64,8 +60,124 @@ def createOneToMany():
     Base.metadata.create_all(engine)
 
 
+"""
+
+Many To One
+To create a Many to one relationship we place a foreighn key refering to the child class in the parent class
+then relationship is declareed which holds the name of the child table
+To make it bidrectional you add a backref valiue in each class refering to both calsses
+"""
+
+
+def createManyToOne():
+
+    class MT0Parent(Base):
+        __tablename__ = "MTOParent"
+        id = Column(Integer, primary_key = True)
+        #Foreign key of child
+        child_id = Column(Integer, ForeignKey("MTOChild.id"))
+        #bidretional reference is made
+        children = relationship("MTOPChild" , backref="parents")
+
+    class MT0Child(Base):
+        __tablename__ = "MTOChild"
+        id = Column(Integer, primary_key = True)
+        #bidretional reference is made
+        child = relationship("MTOParent" , backref="children")
+
+    Base.metadata.create_all(engine)
+
+"""
+One To One
+To create a one to one relationship we place a foreighn key refering to the parent class in the child class
+then relationship is declareed which holds the name of the child table and uselist is passed in and set to false and then backref
+
+in the child calss you make it bidrectional by making a relationship and refernecing the parent table and relationship value
+
+"""
+
+
+def createOneToOne():
+
+    class OneToOneParent(Base):
+        __tablename__ = "OTOParent"
+        id = Column(Integer, primary_key = True)
+        #realtionship is made and uselist is set to false  reference is made
+        child = relationship("OTOChild" ,uselist=False, backref="parent")
+        
+    class OneToOneChild(Base):
+        __tablename__ = "OTOChild"
+        id = Column(Integer, primary_key = True)
+        #foreign key to parent is made
+        parent_id =  Column(Integer, ForeignKey("OTOParent.id"))
+        #realtionship is made and uselist is set to false  reference is made
+        children = relationship("OTOParenr" , backref="child")
+    
+    Base.metadata.create_all(engine)
+
+
+
+"""
+Mnay To Many
+
+Probably the best way to make a many to many object is to use an asscociation object, this is beacuse this table may one day need extra info apart from foreign keys
+
+SO create a left and right id in this object
+even though it is a many to many relationship there is stoill some sort of parent child relationship 
+
+To make the assocatiation table bi directional it must have a relationship to both the parent and the child classes 
+and the parent and child must both refernce the assocatiation object and make reference to the assoctaion tables values that refers to both parent and child
+
+"""
+
+def createManyToMany():
+    class Association(Base):
+        __tablename__ = 'association'
+        left_id = Column(Integer, ForeignKey('left.id'), primary_key=True)
+        right_id = Column(Integer, ForeignKey('right.id'), primary_key=True)
+        extra_data = Column(String(50))
+        #reference to both parent and child
+        child = relationship("Child", back_populates="parents")
+        parent = relationship("Parent", back_populates="children")
+
+    class Parent(Base):
+        __tablename__ = 'left'
+        id = Column(Integer, primary_key=True)
+        #reference to parent
+        children = relationship("Association", back_populates="parent")
+
+    class Child(Base):
+        __tablename__ = 'right'
+        id = Column(Integer, primary_key=True)
+        #reference to parent
+        parents = relationship("Association", back_populates="child")
+    
+    # create parent, append a child via association
+    p = Parent()
+    a = Association(extra_data="some data")
+    a.child = Child()
+    p.children.append(a)
+
+    # iterate through child objects via association, including association
+    # attributes
+    for assoc in p.children:
+        print(assoc.extra_data)
+        print(assoc.child)
+
+        Base.metadata.create_all(engine)
+
+
+"""
+working with this pattern means that child objects must be associated with an assocatiaon object instance before being appended to the parent 
+and access from parent to child goes through the associatio object
+
+
+"""
 
 if __name__ == "__main__":
     #Run methods as you see fit 
-    createOneToMany()
+    #createOneToMany()
+    # createManyToOne()
+    #createOneToOne()
+    createManyToMany()
     
