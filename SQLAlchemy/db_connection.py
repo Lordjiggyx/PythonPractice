@@ -15,7 +15,8 @@ To actually connect to the database you need the correct driver in this case iwa
 from sqlalchemy import create_engine ,Table , Column , Integer , String , MetaData, ForeignKey
 
 #Must indicate the type of database and driver in the connection string
-engine = create_engine('mysql+mysqlconnector://root:root@localhost/python_practice' , echo =True)
+#Do not include echo as it will log everything
+engine = create_engine('mysql+mysqlconnector://root:root@localhost/python_practice' )
 #USED TO CREATE DATABASE - Returns an object of type connection
 engine.connect()
 
