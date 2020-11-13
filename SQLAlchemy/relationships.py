@@ -174,10 +174,81 @@ and access from parent to child goes through the associatio object
 
 """
 
+
+def createRelatedObjects():
+    #Must indicate the type of database and driver in the connection string
+    engine = create_engine('mysql+mysqlconnector://root:root@localhost/relationshippractice')
+
+    #Initilise base class
+    Base = declarative_base()
+
+    #Session is created and you must set the bind parameter to the engine variable
+    session = Session(bind=engine)
+
+        #creating the customer class and it's mapping
+    class Customer(Base):
+    #Class must always have a table name attribute to map it to the database
+        __tablename__ = "customer"
+        id = Column(Integer, primary_key = True)
+        name = Column(String(100), nullable=False)
+        address = Column(String(100), nullable=False)
+        email = Column(String(100), nullable=False)
+        
+
+    class Invoice(Base):
+        __tablename__ = "invoices"
+        id = Column(Integer, primary_key = True)
+        #fOREIGN KEY ESTABLISHED
+        custID = Column(Integer, ForeignKey("customer.id"))
+        address = Column(Integer)
+        amount = Column(Integer)
+        # establishing bidirectional relationship
+        customer = relationship("Customer" , backref="invoices")
+
+    Base.metadata.create_all(engine)
+    #In the event of creating a customer object it will have a blank collection of invoices
+    c1 = Customer(name = "Gopal Krishna", address = "Bank Street Hydarebad", email = "gk@gmail.com")
+
+    #The customer now has an invoices list which we can use to add invoices in the form of a list
+    c1.invoices = [Invoice(amount = 15000), Invoice(amount = 3850)]
+
+
+
+
+
+    """
+    Or a list of objects to be added using add_all() function of session object as shown below
+    You can construct Customer object by providing mapped attribute of invoices in the constructor itself by using the below command −
+    """
+    rows = [
+        Customer(
+            name = "Govind Kala", 
+            address = "Gulmandi Aurangabad", 
+            email = "kala@gmail.com", 
+            invoices = [Invoice(amount = 12000), Invoice( amount = 18500)]),
+
+        Customer(
+            name = "Abdul Rahman", 
+            address = "Rohtak", 
+            email = "abdulr@gmail.com",
+            invoices = [Invoice( amount = 15000), 
+            Invoice( amount = 6000)
+    ])
+    ]
+    
+
+    #Then we add and commit it to the database
+    session.add(c1)
+   
+    session.add_all(rows)
+    session.commit()
+
+
 if __name__ == "__main__":
     #Run methods as you see fit 
     #createOneToMany()
     # createManyToOne()
     #createOneToOne()
-    createManyToMany()
+    #createManyToMany()
+    createRelatedObjects()
     
