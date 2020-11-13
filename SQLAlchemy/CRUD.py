@@ -229,13 +229,92 @@ def bulkUpdate():
 #Filtering
 
 """
+To filter in sqlalchemy you can use the filter method that the query object has
+the method follows the general form
 
+session.query(class).filter(creiteria)
+
+there are mutiple filter operators
+
+== - this operator is used fo a check of equality
+!= this operator is used to determine non equality
+like() - this method produces the LIKE criteria for the Where clause in a select expression mostly used for regex filterinhg
+in_() - This operator checks whetter the column value belongs to a collection of items in a list
+and_() ,- These operators are used to concatenate multiple criteria which mut match you can actually use & but weach condtion must be in brackets
+or_() - This operator is used to provide concatenate multiple criteria which may not all match you can actually use |s but weach condtion must be in brackets
 
 """
 
+def fileterDB():
+    #filter to get any object with an id greater than 1
+    greaterThan2 =session.query(Customer).filter(Customer.id>1)
+    
+    for x in greaterThan2:
+        print(x.name)
+
+def filerOperators():
+    x = "*" *20
+
+    print(x)
+    print("EQUALS")
+    result = session.query(Customer).filter(Customer.id == 1)
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
+    print(x)
+    print("NOT EQUALS")
+    result = session.query(Customer).filter(Customer.id != 1)
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
+    print(x)
+    print("LIKE")
+    result = session.query(Customer).filter(Customer.name.like("T%"))
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
+    print(x)
+    print("IN")
+    result = session.query(Customer).filter(Customer.id.in_({1,4}))
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
+    print(x)
+    print("AND")
+    result = session.query(Customer).filter((Customer.id>1) & (Customer.name.like("T%")) )
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
+    print(x)
+    print("OR")
+    result = session.query(Customer).filter((Customer.id>1) | (Customer.name.like("T%")) )
+    
+    for row in result:
+        print("Name is:",row.name)
+   
+    print(x)
+
 if __name__ == "__main__":
+    #Run methods as you see fit 
     #createTable()
     #addDB()
     #queryDB()
     #updateDB("Tim")
-    bulkUpdate()
+    #ulkUpdate()
+    filerOperators()
+    # fileterDB()
