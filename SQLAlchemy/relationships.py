@@ -185,7 +185,7 @@ def createRelatedObjects():
     #Session is created and you must set the bind parameter to the engine variable
     session = Session(bind=engine)
 
-        #creating the customer class and it's mapping
+    #creating the customer class and it's mapping
     class Customer(Base):
     #Class must always have a table name attribute to map it to the database
         __tablename__ = "customer"
@@ -244,11 +244,52 @@ def createRelatedObjects():
     session.commit()
 
 
+"""
+To delete an object you just delete the object from the mmapped calss from a session and then commit the action,
+deleting multiple related tables may be an issue
+
+Like with hibernate, if you delete a parent object without specifying the cascade the child objects will not be deleted either
+
+There are a number of cascades avalibale and theu can be delcared in the relationship method when mapping the class
+
+save-update
+merge
+expunge
+delete
+delete-orphan
+refresh-expire
+
+The most common ones used together are the all and delete orphan which means that, if a parent class is defined it will delete all the child elements related
+or when they are deasscociated
+
+
+class Customer(Base): 
+   __tablename__ = 'customers'
+   
+   id = Column(Integer, primary_key = True) 
+   name = Column(String) 
+   address = Column(String) 
+   email = Column(String) 
+   invoices = relationship(
+      "Invoice", 
+      order_by = Invoice.id, 
+      back_populates = "customer",
+      cascade = "all, 
+      delete, delete-orphan" 
+   )
+
+"""
+
+
+
+
+
 if __name__ == "__main__":
     #Run methods as you see fit 
     #createOneToMany()
     # createManyToOne()
     #createOneToOne()
     #createManyToMany()
-    createRelatedObjects()
+    #createRelatedObjects()
+  
     
