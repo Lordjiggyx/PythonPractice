@@ -281,15 +281,10 @@ class Customer(Base):
 """
 
 
-
-
-
 if __name__ == "__main__":
     #Run methods as you see fit 
     #createOneToMany()
     # createManyToOne()
     #createOneToOne()
     #createManyToMany()
-    #createRelatedObjects()
-  
-    
+    createRelatedObjects()
